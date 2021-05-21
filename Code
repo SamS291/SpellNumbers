@@ -1,0 +1,113 @@
+Function SPELL(ByVal pNumber)
+Dim Eiro, Cents
+arr = Array("", "", " tukstotis ")
+pNumber = Trim(Str(pNumber))
+xDecimal = InStr(pNumber, ".")
+If xDecimal > 0 Then
+    Cents = Left(Mid(pNumber, xDecimal + 1) & "00", 2)
+    pNumber = Trim(Left(pNumber, xDecimal - 1))
+End If
+xIndex = 1
+Do While pNumber <> ""
+    xHundred = ""
+    xValue = Right(pNumber, 3)
+    If Val(xValue) <> 0 Then
+        xValue = Right("000" & xValue, 3)
+        If Mid(xValue, 1, 1) <> "0" Then
+            xHundred = GetDigit(Mid(xValue, 1, 1)) & " simts "
+            If Left(xHundred, 5) = "viens" Then
+                xHundred = Right(xHundred, Len(xHundred) - 6)
+            Else
+                xHundred = GetDigit(Mid(xValue, 1, 1)) & " simti "
+            End If
+        End If
+        If Mid(xValue, 2, 1) <> "0" Then
+            xHundred = xHundred & GetTens(Mid(xValue, 2))
+        Else
+            xHundred = xHundred & GetDigit(Mid(xValue, 3))
+        End If
+    End If
+    If xHundred <> "" Then
+        Eiro = xHundred & arr(xIndex) & Eiro
+    End If
+    If Len(pNumber) > 3 Then
+        pNumber = Left(pNumber, Len(pNumber) - 3)
+    Else
+        pNumber = ""
+    End If
+    xIndex = xIndex + 1
+Loop
+Eiro = Eiro & " eiro"
+Select Case Cents
+    Case ""
+        Cents = ", 0 centi"
+    Case "01"
+        Cents = ", 1 cents"
+    Case "02"
+        Cents = ", 2 centi"
+    Case "03"
+        Cents = ", 3 centi"
+    Case "04"
+        Cents = ", 4 centi"
+    Case "05"
+        Cents = ", 5 centi"
+    Case "06"
+        Cents = ", 6 centi"
+    Case "07"
+        Cents = ", 7 centi"
+    Case "08"
+        Cents = ", 8 centi"
+    Case "09"
+        Cents = ", 9 centi"
+    Case Else
+        Cents = ", " & Cents & " centi"
+End Select
+SPELL = Eiro & Cents
+End Function
+Function GetTens(pTens)
+Dim Result As String
+Result = ""
+If Val(Left(pTens, 1)) = 1 Then
+    Select Case Val(pTens)
+        Case 10: Result = "desmit"
+        Case 11: Result = "vienpadsmit"
+        Case 12: Result = "divpadsmit"
+        Case 13: Result = "trīispadsmit"
+        Case 14: Result = "cetrpadsmit"
+        Case 15: Result = "piecpadsmit"
+        Case 16: Result = "sespadsmit"
+        Case 17: Result = "septinpadsmit"
+        Case 18: Result = "astonpadsmit"
+        Case 19: Result = "devinpadsmit"
+        Case Else
+    End Select
+Else
+Select Case Val(Left(pTens, 1))
+    Case 2: Result = "divdesmit "
+    Case 3: Result = "trisdesmit "
+    Case 4: Result = "cetrdesmit "
+    Case 5: Result = "piecdesmit "
+    Case 6: Result = "sesdesmit "
+    Case 7: Result = "septindesmit "
+    Case 8: Result = "astondesmit "
+    Case 9: Result = "devindesmit "
+    Case Else
+End Select
+Result = Result & GetDigit(Right(pTens, 1))
+End If
+GetTens = Result
+End Function
+Function GetDigit(pDigit)
+Select Case Val(pDigit)
+    Case 1: GetDigit = "viens"
+    Case 2: GetDigit = "divi"
+    Case 3: GetDigit = "triss"
+    Case 4: GetDigit = "cetri"
+    Case 5: GetDigit = "pieci"
+    Case 6: GetDigit = "sesi"
+    Case 7: GetDigit = "septini"
+    Case 8: GetDigit = "astoni"
+    Case 9: GetDigit = "devini"
+    Case Else: GetDigit = ""
+End Select
+End Function
